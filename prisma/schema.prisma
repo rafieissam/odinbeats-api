@@ -11,12 +11,124 @@ datasource db {
 }
 
 model User {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  email      String   @unique
+  password   String
+
+  isAdmin    Boolean  @default(false)
+  name       String
+
+  playlists  Playlist[]
+  following  Artist[]
+  song_plays SongPlay[]
+
+  @@map("users")
+}
+
+model Playlist {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email     String   @unique
-  password  String
+  name      String
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+
+  songs     PlaylistSong[]
+
+  @@map("playlists")
+}
+
+model PlaylistSong {
+  song        Song     @relation(fields: [songId], references: [id])
+  songId      Int
+  playlist    Playlist @relation(fields: [playlistId], references: [id])
+  playlistId  Int
+
+  order       Int
+  addedAt     DateTime @default(now())
+
+  @@id([songId, playlistId])
+  @@map("playlist_songs")
+}
+
+model Genre {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   name      String
+
+  artists   Artist[]
+  albums    Album[]
+  songs     Song[]
+
+  @@map("genres")
+}
+
+model Artist {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name      String
+  image     String
+
+  genres    Genre[]
+  albums    Album[]
+  songs     Song[]
+  followers User[]
+  @@map("artists")
+}
+
+model Album {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name      String
+  image     String
+
+  artist    Artist   @relation(fields: [artistId], references: [id])
+  artistId  Int
+  genres    Genre[]
+  songs     Song[]
+  @@map("albums")
+}
+
+model Song {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name      String
+  image     String
+  duration  Int
+  path      String
+  format    String
+  
+  artist    Artist    @relation(fields: [artistId], references: [id])
+  artistId  Int
+  album     Album    @relation(fields: [albumId], references: [id])
+  albumId   Int
+  genre     Genre[]
+  plays     SongPlay[]
+  playlists PlaylistSong[]
+  @@map("songs")
+}
+
+model SongPlay {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  song      Song     @relation(fields: [songId], references: [id])
+  songId    Int
+
+  count     Int      @default(0)
+
+  @@id([userId, songId])
+  @@map("song_user_plays")
 }
