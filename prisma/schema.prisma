@@ -10,44 +10,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model RefreshToken {
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  token       String  @unique
+
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String  @unique
+}
+
 model User {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  email      String   @unique
-  password   String
+  email         String   @unique
+  password      String
 
-  isAdmin    Boolean  @default(false)
-  name       String
+  isAdmin       Boolean  @default(false)
+  name          String
 
-  playlists  Playlist[]
-  following  Artist[]
-  song_plays SongPlay[]
+  refreshToken  RefreshToken?
+  likedSongs    LikedSong[]
+  playlists     Playlist[]
+  following     Artist[]
+  songPlays     SongPlay[]
 
   @@map("users")
 }
 
 model Playlist {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   name      String
 
-  userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  userId    String
 
   songs     PlaylistSong[]
 
   @@map("playlists")
 }
 
+model LikedSong {
+  song        Song     @relation(fields: [songId], references: [id])
+  songId      String
+  user        User @relation(fields: [userId], references: [id])
+  userId      String
+
+  addedAt     DateTime @default(now())
+
+  @@id([songId, userId])
+  @@map("liked_songs")
+}
+
 model PlaylistSong {
   song        Song     @relation(fields: [songId], references: [id])
-  songId      Int
+  songId      String
   playlist    Playlist @relation(fields: [playlistId], references: [id])
-  playlistId  Int
+  playlistId  String
 
   order       Int
   addedAt     DateTime @default(now())
@@ -57,7 +81,7 @@ model PlaylistSong {
 }
 
 model Genre {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -71,7 +95,7 @@ model Genre {
 }
 
 model Artist {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -86,7 +110,7 @@ model Artist {
 }
 
 model Album {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -94,14 +118,14 @@ model Album {
   image     String
 
   artist    Artist   @relation(fields: [artistId], references: [id])
-  artistId  Int
+  artistId  String
   genres    Genre[]
   songs     Song[]
   @@map("albums")
 }
 
 model Song {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -111,21 +135,22 @@ model Song {
   path      String
   format    String
   
-  artist    Artist    @relation(fields: [artistId], references: [id])
-  artistId  Int
+  artist    Artist   @relation(fields: [artistId], references: [id])
+  artistId  String
   album     Album    @relation(fields: [albumId], references: [id])
-  albumId   Int
+  albumId   String
   genre     Genre[]
   plays     SongPlay[]
+  likes     LikedSong[]
   playlists PlaylistSong[]
   @@map("songs")
 }
 
 model SongPlay {
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  userId    String
   song      Song     @relation(fields: [songId], references: [id])
-  songId    Int
+  songId    String
 
   count     Int      @default(0)
 

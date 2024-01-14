@@ -1,8 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-    getMe() {
-        return "This is me!";
+
+    constructor(private prisma: PrismaService) {}
+
+    getAll() {
+        return [];
+    }
+
+    async getOne(userId: string) {
+        const user = await this.prisma.user.findUnique({ where: { id: userId }});
+        delete user.password;
+        return user;;
+    }
+    
+    addOne(user: any) {
+        return {};
+    }
+    
+    editOne(userId: string, user: any) {
+        return {};
+    }
+    
+    deleteOne(userId: string) {
+        return 1;
     }
 }
