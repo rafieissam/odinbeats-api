@@ -34,7 +34,6 @@ model User {
   refreshToken  RefreshToken?
   likedSongs    LikedSong[]
   playlists     Playlist[]
-  following     Artist[]
   songPlays     SongPlay[]
 
   @@map("users")
@@ -80,66 +79,20 @@ model PlaylistSong {
   @@map("playlist_songs")
 }
 
-model Genre {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  name      String
-
-  artists   Artist[]
-  albums    Album[]
-  songs     Song[]
-
-  @@map("genres")
-}
-
-model Artist {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  name      String
-  image     String
-
-  genres    Genre[]
-  albums    Album[]
-  songs     Song[]
-  followers User[]
-  @@map("artists")
-}
-
-model Album {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  name      String
-  image     String
-
-  artist    Artist   @relation(fields: [artistId], references: [id])
-  artistId  String
-  genres    Genre[]
-  songs     Song[]
-  @@map("albums")
-}
-
 model Song {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   name      String
-  image     String
   duration  Int
   path      String
   format    String
   
-  artist    Artist   @relation(fields: [artistId], references: [id])
-  artistId  String
-  album     Album    @relation(fields: [albumId], references: [id])
-  albumId   String
-  genre     Genre[]
+  artist    String
+  album     String
+  genre     String[]
+  
   plays     SongPlay[]
   likes     LikedSong[]
   playlists PlaylistSong[]
