@@ -8,8 +8,10 @@
   "scripts": {
     "db:dev:migrate-deploy": "prisma migrate deploy",
     "db:dev:migrate-dev": "prisma migrate dev",
+    "db:dev:migrate-reset": "prisma migrate reset",
     "db:dev:down": "docker stop odinbeats-odinbeats-postgres-1",
     "db:dev:up": "docker-compose up -d",
+    "seed": "ts-node prisma/seed.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
