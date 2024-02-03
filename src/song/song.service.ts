@@ -19,6 +19,7 @@ export class SongService {
             });
         }
         if (dto.text && dto.text.trim() != '') {
+            dto.text = dto.text.trim().split(" ").join(" & ");
             whereClauses.push({
                 name: {
                     search: dto.text,
