@@ -12,6 +12,13 @@ export class PlaylistService {
             where: {
                 userId,
             },
+            include: {
+                songs: {
+                    include: {
+                        song: true,
+                    }
+                },
+            },
         });
     }
 
@@ -20,6 +27,13 @@ export class PlaylistService {
             where: {
                 id: playlistId,
                 userId,
+            },
+            include: {
+                songs: {
+                    include: {
+                        song: true,
+                    }
+                },
             },
         });
     }
