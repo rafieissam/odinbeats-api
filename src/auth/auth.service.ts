@@ -20,8 +20,8 @@ export class AuthService {
                 data: dto,
             });
             delete user.password;
-            const tokens = await this.generateTokens(user.id, { email: user.email, isAdmin: user.isAdmin });
-            return { message: "User signup successfully!", results: { user, tokens } };
+            const tokens = await this.generateTokens(user.id, { email: user.email });
+            return { message: "User signup successfully!", results: { user, ...tokens } };
         } catch (err) {
             if (err.code == "P2002") {
                 return { error: true, message: "Email already registered!" };
@@ -37,8 +37,8 @@ export class AuthService {
         if (!valid) {
             return { error: true, message: "Invalid email or password!" };
         }
-        const tokens = await this.generateTokens(user.id, { email: user.email, isAdmin: user.isAdmin });
-        return { message: "User signin successful!", results: { user, tokens } };
+        const tokens = await this.generateTokens(user.id, { email: user.email });
+        return { message: "User signin successful!", results: { user, ...tokens } };
     }
 
     async refreshToken(token: string) {
@@ -48,8 +48,8 @@ export class AuthService {
             return { error: true, message: "Invalid token provided!" };
         }
         const user = refreshToken.user;
-        const tokens = await this.generateTokens(user.id, { email: user.email, isAdmin: user.isAdmin });
-        return { message: "Refresh token successful!", results: { user, tokens } };
+        const tokens = await this.generateTokens(user.id, { email: user.email });
+        return { message: "Refresh token successful!", results: { user, ...tokens } };
     }
 
     private async generateTokens(userId: string, payload: any) {
@@ -93,7 +93,14 @@ export class AuthService {
                 expiresAt
             }
         });
-        return token;
+        return {
+            token,
+            options: {
+                maxAge: refreshTokenLife,
+                httpOnly: true,
+                secure: true,
+            },
+        };
     }
     
     private sha256Hash(input: string): string {

@@ -1,5 +1,4 @@
-import { Injectable, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class UserService {
     async getOne(userId: string) {
         const user = await this.prisma.user.findUnique({ where: { id: userId }});
         delete user.password;
-        return user;;
+        return user;
     }
     
     addOne(user: any) {
