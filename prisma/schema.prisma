@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -100,8 +101,8 @@ model SongPlay {
   song      Song     @relation(fields: [songId], references: [id])
   songId    String
 
-  count     Int      @default(0)
+  playedAt  DateTime @default(now())
 
-  @@id([userId, songId])
+  @@id([playedAt, songId])
   @@map("song_user_plays")
 }
