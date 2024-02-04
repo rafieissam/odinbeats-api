@@ -26,7 +26,7 @@ export class PlaylistController {
     }
 
     @Patch(':playlistId')
-    async updateOne(@User('sub') userId: string, @Param('playlistId') playlistId: string, dto: PlaylistUpdateDto) {
+    async updateOne(@User('sub') userId: string, @Param('playlistId') playlistId: string, @Body() dto: PlaylistUpdateDto) {
         return await this.playlistService.updateOne(userId, playlistId, dto);
     }
 
