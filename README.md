@@ -2,6 +2,14 @@
 
 OdinBeats API is the backend service for the OdinBeats web application. It provides endpoints for user authentication, managing playlists, and songs. This API utilizes JWT authentication with refresh tokens for secure access to resources.
 
+## Live Demo
+
+You can explore a live demo of the OdinBeats API by visiting the following URL:
+
+[OdinBeats API Demo](https://odinbeats-api.onrender.com)
+
+The live demo provides access to a deployed instance of the API, allowing you to interact with the endpoints and explore its functionality in real-time.
+
 ## Installation
 
 To run the OdinBeats API locally, follow these steps:
@@ -27,7 +35,7 @@ To run the OdinBeats API locally, follow these steps:
 4. Set up environment variables by copying the `.env copy` file and filling in the required fields:
 
    ```bash
-   cp .env\ copy .env
+   cp .env copy .env
    ```
 
 5. Start the PostgreSQL database using Docker Compose:
@@ -57,6 +65,18 @@ http://localhost:3000/docs
 ```
 The API documentation provides detailed information about the available endpoints, request parameters, response formats, and authentication requirements. Below is a screenshot of the API documentation:
 ![API Documentation](screenshots/docs.png)
+
+## Used Technologies
+
+The OdinBeats API is built using the following technologies and frameworks:
+
+- [Nest.js](https://nestjs.com/): A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.
+- [Prisma](https://www.prisma.io/): A modern database toolkit for TypeScript and Node.js.
+- [PostgreSQL](https://www.postgresql.org/): An open-source relational database management system.
+- [Docker](https://www.docker.com/): A platform for building, shipping, and running applications in containers.
+- [JWT (JSON Web Tokens)](https://jwt.io/): A compact, URL-safe means of representing claims to be transferred between two parties.
+
+These technologies are utilized to ensure the efficiency, security, and scalability of the OdinBeats API.
 
 ## Future Work
 
