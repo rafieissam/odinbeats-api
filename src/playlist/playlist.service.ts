@@ -75,11 +75,7 @@ export class PlaylistService {
         return { message: "Playlist deleted successfully!" };
     }
 
-    async addSongToPlaylist(userId: string, playlistId: string, songId: string) {
-        const preCheck = await this.getOne(userId, playlistId);
-        if (!preCheck) {
-            return { error: true, message: "Playlist not found!" };
-        }
+    async addSongToPlaylist(playlistId: string, songId: string) {
         await this.prisma.playlistSong.upsert({
             where: {
                 songId_playlistId: {
@@ -96,11 +92,7 @@ export class PlaylistService {
         return { message: "Song added to playlist successfully!" };
     }
 
-    async removeSongFromPlaylist(userId: string, playlistId: string, songId: string) {
-        const preCheck = await this.getOne(userId, playlistId);
-        if (!preCheck) {
-            return { error: true, message: "Playlist not found!" };
-        }
+    async removeSongFromPlaylist(playlistId: string, songId: string) {
         await this.prisma.playlistSong.delete({
             where: {
                 songId_playlistId: {

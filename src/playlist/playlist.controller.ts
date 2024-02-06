@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UserGuard } from 'src/auth/guards';
 import { PlaylistService } from './playlist.service';
 import { User } from 'src/auth/decorators';
 import { PlaylistUpdateDto } from './dto';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PlaylistGuard } from './playlist.guard';
 
 @ApiTags('Playlists')
 @ApiBearerAuth()
@@ -20,7 +21,9 @@ export class PlaylistController {
     }
 
     @Get(':playlistId')
+    @UseGuards(PlaylistGuard)
     @ApiResponse({ status: 200, description: 'The playlist has been successfully fetched.' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
     async getOne(@User('sub') userId: string, @Param('playlistId') playlistId: string) {
         return await this.playlistService.getOne(userId, playlistId);
     }
@@ -32,18 +35,23 @@ export class PlaylistController {
     }
 
     @Patch(':playlistId')
+    @UseGuards(PlaylistGuard)
     @ApiResponse({ status: 200, description: 'The playlist has been successfully updated.' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
     async updateOne(@User('sub') userId: string, @Param('playlistId') playlistId: string, @Body() dto: PlaylistUpdateDto) {
         return await this.playlistService.updateOne(userId, playlistId, dto);
     }
 
     @Delete(':playlistId')
+    @UseGuards(PlaylistGuard)
     @ApiResponse({ status: 200, description: 'The playlist has been successfully deleted.' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
     async deleteOne(@User('sub') userId: string, @Param('playlistId') playlistId: string) {
         return await this.playlistService.deleteOne(userId, playlistId);
     }
 
     @Patch(':playlistId/add-song')
+    @UseGuards(PlaylistGuard)
     @ApiBody({
         required: true,
         schema: {
@@ -57,16 +65,13 @@ export class PlaylistController {
         },
     })
     @ApiResponse({ status: 200, description: 'The song has been successfully added to playlist.' })
-    @ApiResponse({ status: 404, description: 'The playlist was not found.' })
-    async addSongToPlaylist(@User('sub') userId: string, @Param('playlistId') playlistId: string, @Body('songId') songId: string) {
-        const res = await this.playlistService.addSongToPlaylist(userId, playlistId, songId);
-        if (res.error) {
-            throw new HttpException(res.message, HttpStatus.NOT_FOUND);
-        }
-        return res;
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
+    async addSongToPlaylist(@Param('playlistId') playlistId: string, @Body('songId') songId: string) {
+        return await this.playlistService.addSongToPlaylist(playlistId, songId);
     }
 
     @Patch(':playlistId/remove-song')
+    @UseGuards(PlaylistGuard)
     @ApiBody({
         required: true,
         schema: {
@@ -80,12 +85,8 @@ export class PlaylistController {
         },
     })
     @ApiResponse({ status: 200, description: 'The song has been successfully removed from playlist.' })
-    @ApiResponse({ status: 404, description: 'The playlist was not found.' })
-    async removeSongToPlaylist(@User('sub') userId: string, @Param('playlistId') playlistId: string, @Body('songId') songId: string) {
-        const res = await this.playlistService.removeSongFromPlaylist(userId, playlistId, songId);
-        if (res.error) {
-            throw new HttpException(res.message, HttpStatus.NOT_FOUND);
-        }
-        return res;
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
+    async removeSongToPlaylist(@Param('playlistId') playlistId: string, @Body('songId') songId: string) {
+        return await this.playlistService.removeSongFromPlaylist(playlistId, songId);
     }
 }
