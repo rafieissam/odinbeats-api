@@ -10,6 +10,8 @@ You can explore a live demo of the OdinBeats API by visiting the following URL:
 
 The live demo provides access to a deployed instance of the API, allowing you to interact with the endpoints and explore its functionality in real-time.
 
+N.B. This is hosted on Render.com and it might take some time to start up if it hasn't been used in a while.
+
 ## Installation
 
 To run the OdinBeats API locally, follow these steps:
