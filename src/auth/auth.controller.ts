@@ -3,13 +3,16 @@ import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dto';
 import { Cookies } from './decorators';
 import { Response } from 'express';
+import { ApiCookieAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
 
     constructor (private authService: AuthService) {}
 
     @Post('signup')
+    @ApiResponse({ status: 201, description: 'The user has been successfully registered.' })
     async signup(@Body() dto: SignUpDto, @Res({ passthrough: true }) response: Response) {
         const res = await this.authService.signup(dto);
         if (res.error) {
@@ -22,6 +25,7 @@ export class AuthController {
     }
 
     @Post('signin')
+    @ApiResponse({ status: 201, description: 'The user has been successfully logged in.' })
     async signin(@Body() dto: SignInDto, @Res({ passthrough: true }) response: Response) {
         const res = await this.authService.signin(dto);
         if (res.error) {
@@ -34,6 +38,8 @@ export class AuthController {
     }
 
     @Post('refresh-token')
+    @ApiCookieAuth('auth-token')
+    @ApiResponse({ status: 201, description: 'The user\'s token has been successfully refreshed.' })
     async refreshToken(@Cookies('auth-token') refreshToken: string, @Res({ passthrough: true }) response: Response) {
         const res = await this.authService.refreshToken(refreshToken);
         if (res.error) {
