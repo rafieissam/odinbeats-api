@@ -75,7 +75,7 @@ export class AuthService {
         const token: string = uuidv4();
         const hashedToken = this.sha256Hash(token);
         
-        const refreshTokenLife = 5 * 24 * 60 * 60 * 1000; // 5 Days
+        const refreshTokenLife = parseInt(this.config.get('REFRESH_TOKEN_TTL'));
         const expiresAt: Date = new Date();
         expiresAt.setTime(new Date().getTime() + refreshTokenLife);
 
