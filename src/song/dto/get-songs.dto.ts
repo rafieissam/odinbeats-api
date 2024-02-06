@@ -5,7 +5,7 @@ import { IsIn, IsInt, IsOptional, IsString, Min } from "class-validator";
 export class GetSongsDto {
     @ApiProperty({
         required: false,
-        example: "Queen",
+        example: "Post Malone",
     })
     @IsString()
     @IsOptional()

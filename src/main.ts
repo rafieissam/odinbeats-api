@@ -20,6 +20,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('OdinBeats API')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const theme = new SwaggerTheme('v3');
   const options = {
