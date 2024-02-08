@@ -41,6 +41,9 @@ export class AuthController {
     @ApiCookieAuth('auth-token')
     @ApiResponse({ status: 201, description: 'The user\'s token has been successfully refreshed.' })
     async refreshToken(@Cookies('auth-token') refreshToken: string, @Res({ passthrough: true }) response: Response) {
+        if (!refreshToken) {
+            throw new HttpException("Refresh token not provided!", HttpStatus.BAD_REQUEST);
+        }
         const res = await this.authService.refreshToken(refreshToken);
         if (res.error) {
             throw new HttpException(res.message, HttpStatus.BAD_REQUEST);
