@@ -93,14 +93,13 @@ export class AuthService {
                 expiresAt
             }
         });
-        console.log(this.config.get('APP_DOMAIN'));
         return {
             token,
             options: {
                 maxAge: refreshTokenLife,
                 httpOnly: true,
-                // secure: true,
-                // domain: this.config.get('APP_DOMAIN'),
+                secure: true,
+                sameSite: 'none' as 'none',
             },
         };
     }
